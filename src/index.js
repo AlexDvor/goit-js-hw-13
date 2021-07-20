@@ -5,6 +5,8 @@ import imgCardTpl from './templates/card.hbs';
 import { func } from 'assert-plus';
 
 
+const DEBOUNCE_DELAY = 300;
+
 const refs = {
     inputValue: document.querySelector('.search-form'),
     gallery: document.querySelector('.gallery'),
@@ -12,12 +14,13 @@ const refs = {
 
 
 
-refs.inputValue.addEventListener('input', debounce(onSearch, 300))
+refs.inputValue.addEventListener('input', debounce(onSearch, DEBOUNCE_DELAY))
 
 
 function onSearch(e) {
         const inputValue = e.target.value;
-        API.fetchApi(inputValue).then(console.log)
+        // API.fetchApi(inputValue)
+        API.fetchApi(inputValue).then(item=>item.hits).then(renderCard)
    
 }
 
@@ -27,6 +30,6 @@ function onSearch(e) {
 function renderCard(obj) {
     const card = imgCardTpl(obj);
     console.log(card)
-    return refs.gallery.innerHTML = card;
+     refs.gallery.innerHTML = card;
 
 }
