@@ -4,23 +4,32 @@ import { debounce } from 'lodash';
 import imgCardTpl from './templates/card.hbs';
 import { func } from 'assert-plus';
 
-
-const DEBOUNCE_DELAY = 300;
+// const DEBOUNCE_DELAY = 300;
 
 const refs = {
-    inputValue: document.querySelector('.search-form'),
+    searchForm: document.querySelector('.search-form'),
     gallery: document.querySelector('.gallery'),
 }
 
 
 
-refs.inputValue.addEventListener('input', debounce(onSearch, DEBOUNCE_DELAY))
+
+refs.searchForm.addEventListener('submit', onSearch);
+
+
 
 
 function onSearch(e) {
-        const inputValue = e.target.value;
-        // API.fetchApi(inputValue)
-        API.fetchApi(inputValue).then(item=>item.hits).then(renderCard)
+    e.preventDefault()
+    const searchQuery = e.currentTarget.elements.searchQuery.value
+
+    if (searchQuery === '') {
+        clearCard()
+        return 
+    }
+
+
+    API.fetchApi(searchQuery).then(item => item.hits).then(renderCard).catch(error => {console.log(error)})
    
 }
 
@@ -29,7 +38,13 @@ function onSearch(e) {
 
 function renderCard(obj) {
     const card = imgCardTpl(obj);
-    console.log(card)
+    // console.log(card)
      refs.gallery.innerHTML = card;
 
+}
+
+
+
+function clearCard() {
+     refs.gallery.innerHTML = '';
 }
