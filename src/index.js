@@ -9,12 +9,14 @@ import { func } from 'assert-plus';
 const refs = {
     searchForm: document.querySelector('.search-form'),
     gallery: document.querySelector('.gallery'),
+    loadMoreBtn: document.querySelector('.load-more')
 }
 
 
 
 
 refs.searchForm.addEventListener('submit', onSearch);
+refs.loadMoreBtn.addEventListener('click', onLoadMore);
 
 
 
@@ -47,4 +49,9 @@ function renderCard(obj) {
 
 function clearCard() {
      refs.gallery.innerHTML = '';
+}
+
+
+function onLoadMore() {
+    
 }
