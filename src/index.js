@@ -13,23 +13,29 @@ const refs = {
     loadMoreBtn: document.querySelector('.load-more')
 }
 
+console.log(refs.loadMoreBtn)
 
 refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
+refs.loadMoreBtn.classList.add('is-hidden')
 
 
 function onSearch(e) {
+    
     e.preventDefault()
     fetchApi.query = e.currentTarget.elements.searchQuery.value
-
+    fetchApi.resetPage()
+    clearArticleList()
+    refs.loadMoreBtn.classList.remove('is-hidden')
+    
     if (fetchApi.query === '') {
-        clearCard()
+        refs.loadMoreBtn.classList.add('is-hidden')
         return 
     }
 
 
     // FetchApi.getApiService(FetchApi.searchQuery).then(item => item.hits).then(renderCard).catch(error => {console.log(error)})
-    fetchApi.getApiService().then(item => item.hits).then(renderCard).catch(error => {console.log(error)})
+    fetchApi.getApiService().then(renderCard).catch(error =>{ console.log(error)})
    
 }
 
@@ -38,18 +44,22 @@ function onSearch(e) {
 
 function renderCard(obj) {
     const card = imgCardTpl(obj);
-    // console.log(card)
-     refs.gallery.innerHTML = card;
+    refs.gallery.insertAdjacentHTML('beforeend', card);
 
 }
 
 
 
-function clearCard() {
+function clearArticleList() {
      refs.gallery.innerHTML = '';
 }
 
 
 function onLoadMore() {
-    
+  
+
+    fetchApi
+        .getApiService()
+        .then(renderCard)
+        .catch(error => { console.log(error)})
 }
