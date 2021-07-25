@@ -3,8 +3,7 @@ import FetchApi from './js/fetchApi';
 import imgCardTpl from './templates/card.hbs';
 import { func } from 'assert-plus';
 const fetchApi = new FetchApi()
-
-// const DEBOUNCE_DELAY = 300;
+import { Notify } from "notiflix";
 
 
 const refs = {
@@ -13,39 +12,53 @@ const refs = {
     loadMoreBtn: document.querySelector('.load-more')
 }
 
-console.log(refs.loadMoreBtn)
 
 refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
-refs.loadMoreBtn.classList.add('is-hidden')
 
 
-function onSearch(e) {
+
+async function onSearch(e) {
     
     e.preventDefault()
     fetchApi.query = e.currentTarget.elements.searchQuery.value
     fetchApi.resetPage()
     clearArticleList()
-    refs.loadMoreBtn.classList.remove('is-hidden')
     
     if (fetchApi.query === '') {
-        refs.loadMoreBtn.classList.add('is-hidden')
+        removeIsVisibleClass()
         return 
     }
 
+    try {
+        
+        const response = await fetchApi.getApiService()
+        console.log(response)
+        renderCard(response)
+        notification(response)
+       
 
-    // FetchApi.getApiService(FetchApi.searchQuery).then(item => item.hits).then(renderCard).catch(error => {console.log(error)})
-    fetchApi.getApiService().then(renderCard).catch(error =>{ console.log(error)})
+    } catch (error) {
+        console.log(error)
+    }
+
+
+ 
+    // fetchApi.getApiService().then(renderCard).catch(error =>{ console.log(error)})
    
 }
 
 
+function renderCard(response) {
 
-
-function renderCard(obj) {
-    const card = imgCardTpl(obj);
-    refs.gallery.insertAdjacentHTML('beforeend', card);
-
+    if (response.totalHits > fetchApi.perPage) {
+        addIsVisibleClass()
+    } else {
+        removeIsVisibleClass()
+    }
+    
+    const cards = imgCardTpl(response.hits);
+    refs.gallery.insertAdjacentHTML('beforeend', cards);
 }
 
 
@@ -54,12 +67,34 @@ function clearArticleList() {
      refs.gallery.innerHTML = '';
 }
 
-
-function onLoadMore() {
-  
-
-    fetchApi
-        .getApiService()
-        .then(renderCard)
-        .catch(error => { console.log(error)})
+async function onLoadMore() {
+    const response = await fetchApi.getApiService()
+    renderCard(response)
 }
+
+function removeIsVisibleClass() {
+     refs.loadMoreBtn.classList.remove('is-visible')
+    
+}
+
+function addIsVisibleClass() {
+     refs.loadMoreBtn.classList.add('is-visible')
+    
+}
+
+
+function notification(res) {
+
+    if (res.total === 0) {
+        return  Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+    }
+
+    if (res.total >= 1) {
+        return Notify.success(`Hooray! We found ${res.totalHits} images.`)
+    }
+
+}
+
+
+
+

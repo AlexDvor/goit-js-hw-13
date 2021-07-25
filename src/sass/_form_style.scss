@@ -50,10 +50,10 @@ img {
 }
 
 .load-more {
-  display: block;
+  display: none;
   margin: 20px auto;
 }
 
-.is-hidden {
-  display: none;
+.is-visible {
+  display: flex;
 }

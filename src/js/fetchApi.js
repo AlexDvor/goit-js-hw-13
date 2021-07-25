@@ -9,19 +9,19 @@ export default class FetchApi {
     }
 
 async getApiService() {
-    console.log(this)
+    // console.log(this)
     
     const API_KEY = '22579303-973b9b71134c76d3c38c0933d';
     const URL = `https://pixabay.com/api/?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=${this.perPage}`;
     
-    return await axios.get(URL).then(res => res.data).then(item => item.hits).then(this.incrementPage());
+    // return await axios.get(URL).then(res => res.data).then(item => item.hits).then(this.incrementPage());
+    return await axios.get(URL).then(res => res.data).then(this.incrementPage());
     }
 
 
     get query () {
         return this.searchQuery;
     }
-
 
     set query(newQuery) {
         this.searchQuery = newQuery;
