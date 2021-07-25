@@ -4,6 +4,7 @@ import imgCardTpl from './templates/card.hbs';
 import { func } from 'assert-plus';
 const fetchApi = new FetchApi()
 import { Notify } from "notiflix";
+// import { SimpleLightbox } from "simplelightbox/dist/simple-lightbox.esm";
 
 
 const refs = {
@@ -12,8 +13,10 @@ const refs = {
     loadMoreBtn: document.querySelector('.load-more'),
 }
 
+
 refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
+
 
 
 
@@ -31,7 +34,7 @@ async function onSearch(e) {
 
     try {
         const response = await fetchApi.getApiService()
-        console.log(response)
+        // console.log(response)
         renderCard(response)
         notification(response)
     } catch (error) {
@@ -43,11 +46,13 @@ async function onLoadMore() {
 
     try {
         const response = await fetchApi.getApiService()
-        if (refs.gallery.querySelectorAll('.photo-card').length === response.totalHits) {
+        if (refs.gallery.childElementCount === response.totalHits) {
+            
             Notify.warning("We're sorry, but you've reached the end of search results.");  
             refs.loadMoreBtn.style.display = 'none'
  }
         renderCard(response)
+        // console.log(refs.gallery.childElementCount)
 
     } catch (error) {
         console.log(error)
