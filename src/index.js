@@ -40,12 +40,7 @@ async function onSearch(e) {
 
     } catch (error) {
         console.log(error)
-    }
-
-
- 
-    // fetchApi.getApiService().then(renderCard).catch(error =>{ console.log(error)})
-   
+    }   
 }
 
 
