@@ -9,9 +9,8 @@ import { Notify } from "notiflix";
 const refs = {
     searchForm: document.querySelector('.search-form'),
     gallery: document.querySelector('.gallery'),
-    loadMoreBtn: document.querySelector('.load-more')
+    loadMoreBtn: document.querySelector('.load-more'),
 }
-
 
 refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
