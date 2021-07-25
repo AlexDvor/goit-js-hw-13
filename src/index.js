@@ -31,18 +31,29 @@ async function onSearch(e) {
     }
 
     try {
-        
         const response = await fetchApi.getApiService()
         console.log(response)
         renderCard(response)
         notification(response)
-       
-
     } catch (error) {
         console.log(error)
     }   
 }
 
+async function onLoadMore() {
+
+    try {
+        const response = await fetchApi.getApiService()
+        if (refs.gallery.querySelectorAll('.photo-card').length === response.totalHits) {
+            Notify.warning("We're sorry, but you've reached the end of search results.");  
+            refs.loadMoreBtn.style.display = 'none'
+ }
+        renderCard(response)
+
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 function renderCard(response) {
 
@@ -56,15 +67,8 @@ function renderCard(response) {
     refs.gallery.insertAdjacentHTML('beforeend', cards);
 }
 
-
-
 function clearArticleList() {
      refs.gallery.innerHTML = '';
-}
-
-async function onLoadMore() {
-    const response = await fetchApi.getApiService()
-    renderCard(response)
 }
 
 function removeIsVisibleClass() {
@@ -77,7 +81,6 @@ function addIsVisibleClass() {
     
 }
 
-
 function notification(res) {
 
     if (res.total === 0) {
@@ -87,6 +90,8 @@ function notification(res) {
     if (res.total >= 1) {
         return Notify.success(`Hooray! We found ${res.totalHits} images.`)
     }
+
+   
 
 }
 
