@@ -4,7 +4,12 @@ import imgCardTpl from './templates/card.hbs';
 import { func } from 'assert-plus';
 const fetchApi = new FetchApi()
 import { Notify } from "notiflix";
-import simpleLightbox from './js/simple-lightbox'
+// import simpleLightbox from './js/simple-lightbox'
+import SimpleLightbox from "simplelightbox";
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
+
+let gallery = new SimpleLightbox('.img-wrapper a');
 
 
 const refs = {
@@ -14,10 +19,8 @@ const refs = {
 }
 
 
-
 refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
-
 
 
 async function onSearch(e) {
@@ -36,7 +39,8 @@ async function onSearch(e) {
         const response = await fetchApi.getApiService()
         // console.log(response)
         renderCard(response)
-        simpleLightbox()
+        // simpleLightbox()
+        gallery.refresh()
         notification(response)
     } catch (error) {
         console.log(error)
@@ -53,7 +57,8 @@ async function onLoadMore() {
             refs.loadMoreBtn.style.display = 'none'
         }
         renderCard(response)
-        simpleLightbox()
+        gallery.refresh()
+        // simpleLightbox()
         // console.log(refs.gallery.childElementCount)
 
     } catch (error) {
@@ -100,3 +105,6 @@ function notification(res) {
    
 
 }
+
+
+
